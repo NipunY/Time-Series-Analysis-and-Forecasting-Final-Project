@@ -1,0 +1,803 @@
+OPEN DATA "C:\Users\HP\Documents\Final_Project Test data.xlsx"
+CALENDAR(M) 2002:1
+DATA(FORMAT=XLSX,ORG=COLUMNS) 2002:01 2023:01 TREASURY<<"T10Y2Y" INDUSTRIAL<<"INDPRO" CPI<<"CPIAUCSL"
+GRAPH(STYLE=LINE,HEADER="Monthly Average Change in Treasury") 1
+# TREASURY
+GRAPH(STYLE=LINE,HEADER="Monthy average change in Industrial Index") 1
+# INDUSTRIAL
+GRAPH(STYLE=LINE,HEADER="Monthly Average change in CPI") 1
+# CPI
+GRAPH(STYLE=LINE,OVERLAY=LINE,HEADER="CPI, INDUSTRIAL, TREASURY",KEY=BELOW) 3
+# CPI
+# INDUSTRIAL
+# TREASURY
+
+@bjident CPI
+
+@bjident INDUSTRIAL
+
+@bjident TREASURY
+
+DIFF(SDIFFS=1) CPI / A_CPI
+DIFF(SDIFFS=1) INDUSTRIAL / A_INDUSTRIAL
+DIFF(SDIFFS=1) TREASURY / A_TREASURY
+
+GRAPH(STYLE=LINE,HEADER="Annually Differenced Monthly Changes",KEY=BELOW) 3
+# A_CPI
+# A_INDUSTRIAL
+# A_TREASURY
+
+@bjident A_CPI
+@bjident A_INDUSTRIAL
+@bjident A_TREASURY
+
+@DFUNIT(DET=NONE,METHOD=BIC) A_CPI
+
+Dickey-Fuller Unit Root Test, Series A_CPI
+Regression Run From 2003:04 to 2023:01
+Observations        239
+Without intercept or trend
+With 2 lags chosen from 3 by BIC/SBC
+Null is unit root. Reject in left tail.
+
+Sig Level    Crit Value
+1%(**)         -2.57418
+5%(*)          -1.94097
+10%            -1.61636
+
+T-Statistic    -0.50358
+
+@DFUNIT(DET=NONE,METHOD=BIC) A_INDUSTRIAL
+
+Dickey-Fuller Unit Root Test, Series A_INDUSTRIAL
+Regression Run From 2003:04 to 2023:01
+Observations        239
+Without intercept or trend
+With 2 lags chosen from 3 by BIC/SBC
+Null is unit root. Reject in left tail.
+
+Sig Level    Crit Value
+1%(**)       -2.57418
+5%(*)        -1.94097
+10%          -1.61636
+
+T-Statistic  -2.93502**
+DIFF INDUSTRIAL / INDUSTRIAL_DIFF
+@bjident INDUSTRIAL_DIFF
+*
+@DFUNIT(DET=NONE,METHOD=BIC) INDUSTRIAL_DIFF
+
+Dickey-Fuller Unit Root Test, Series INDUSTRIAL_DIFF
+Regression Run From 2002:03 to 2023:01
+Observations        252
+Without intercept or trend
+With 0 lags chosen from 3 by BIC/SBC
+Null is unit root. Reject in left tail.
+
+Sig Level    Crit Value
+1%(**)        -2.5737
+5%(*)         -1.9409
+10%           -1.6163
+
+T-Statistic  -15.8220**
+
+
+
+
+@DFUNIT(DET=NONE,METHOD=BIC) A_TREASURY
+
+Dickey-Fuller Unit Root Test, Series A_TREASURY
+Regression Run From 2003:05 to 2023:01
+Observations        238
+Without intercept or trend
+With 3 lags chosen from 3 by BIC/SBC
+Null is unit root. Reject in left tail.
+
+Sig Level    Crit Value
+1%(**)       -2.57421
+5%(*)        -1.94097
+10%          -1.61636
+
+T-Statistic  -2.76998**
+
+cmom(corr, print)
+# A_INDUSTRIAL A_CPI A_TREASURY
+
+Correlation Matrix
+             A_INDUSTRIAL    A_CPI      A_TREASURY
+A_INDUSTRIAL  1.000000000  0.425854022 -0.305900489
+A_CPI         0.425854022  1.000000000 -0.218361437
+A_TREASURY   -0.305900489 -0.218361437  1.000000000
+
+
+@bjautofit(pmax=5, qmax=5, crit=sbc) A_CPI
+
+BIC analysis of models for series A_CPI
+   MA
+AR    0         1         2         3        4         5
+ 0 1655.7200 1342.5404 1094.6420  924.8405 903.5544  800.0670
+ 1  713.9991  653.2098  651.3909  655.7970 661.2812  666.4010
+ 2  656.0284  653.4014  655.9213  651.3905 653.7187  672.0300
+ 3  651.9602  657.4216  663.1737  663.4568 664.2897  661.9498
+ 4  657.4080  752.7859  648.6144* 658.7059 657.9931  657.2648
+ 5  662.1156  779.9587  653.1257  651.6546 660.8324 1014.1598
+
+@bjautofit(pmax=5, qmax=5, crit=sbc) A_TREASURY
+
+BIC analysis of models for series A_TREASURY
+   MA
+AR    0         1         2         3          4         5
+ 0  554.2440  254.0102   89.2483   13.0600   -46.4050  -52.9641
+ 1  -76.3904 -129.2340 -124.5896 -120.5789  -115.1794 -110.0801
+ 2 -112.7438 -124.8174 -123.7583 -121.9771  -116.0419 -112.1158
+ 3 -113.7630 -124.6874 -121.5582 -126.5810  -110.5838 -105.7351
+ 4 -115.4943 -115.4191 -116.0764 -121.4724  -125.3492 -115.3353
+ 5 -112.9323 -110.0655 -117.2145 -136.5743* -114.6156 -126.8380
+
+@bjautofit(pmax=5, qmax=5, crit=sbc) A_INDUSTRIAL
+
+BIC analysis of models for series A_INDUSTRIAL
+   MA
+AR    0         1         2         3         4         5
+ 0 1422.0690 1170.1657 1044.9221 1003.6645  975.1573  970.6871
+ 1  945.5009  919.6061  923.9387  927.7099  930.7682  935.0104
+ 2  930.8268  924.3849  948.2961  927.4078  925.3200  926.5469
+ 3  923.1911  927.1150  916.0680  914.2776* 918.2408  936.6047
+ 4  926.1671  940.0460  927.9900  940.7239  942.0079  937.0021
+ 5  930.5504  927.9667  921.5517  927.6624  939.4632 1063.7930
+
+
+*Picking out the best model based on the BIC Analysis:
+
+
+*For CPI, ARMA(4,2) is the best model.
+*For Industrial, ARMA(3,3) is the best model.
+*For treasury, ARMA(5,3) is the best model.
+
+BOXJENK(MAXL,CONST,AR=4,MA=2) A_CPI
+
+Box-Jenkins - Estimation by ML Gauss-Newton
+Convergence in    36 Iterations. Final criterion was  0.0000000 <=  0.0000100
+
+Dependent Variable A_CPI
+Monthly Data From 2003:01 To 2023:01
+Usable Observations                       241
+Degrees of Freedom                        234
+Centered R^2                        0.9673241
+R-Bar^2                             0.9664862
+Uncentered R^2                      0.9860765
+Mean of Dependent Variable       5.6888506224
+Std Error of Dependent Variable  4.9121552146
+Standard Error of Estimate       0.8992569602
+Sum of Squared Residuals         189.22716082
+Log Likelihood                      -314.7750
+Durbin-Watson Statistic                1.9797
+Q(36-6)                               98.0673
+Significance Level of Q             0.0000000
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  CONSTANT                      6.022660635  1.673350483      3.59916  0.00038962
+2.  AR{1}                         2.536088097  0.313632145      8.08619  0.00000000
+3.  AR{2}                        -2.491385976  0.688448893     -3.61884  0.00036262
+4.  AR{3}                         1.248151926  0.546932099      2.28210  0.02338224
+5.  AR{4}                        -0.300820074  0.148063688     -2.03169  0.04331479
+6.  MA{1}                        -0.987377625  0.325622288     -3.03228  0.00270057
+7.  MA{2}                         0.203666120  0.313289926      0.65009  0.51627288
+
+@REGCRITS
+
+Information Criteria
+AIC          2.679
+SBC          2.794
+Hannan-Quinn 2.725
+(log) FPE    2.679
+
+
+
+
+
+BOXJENK(MAXL,CONST,AR=3,MA=3) A_INDUSTRIAL
+
+Box-Jenkins - Estimation by ML Gauss-Newton
+NO CONVERGENCE IN 65 ITERATIONS. FINAL NORMED GRADIENT 2.75109e+07
+SUBITERATIONS LIMIT EXCEEDED.
+ESTIMATION POSSIBLY HAS STALLED OR MACHINE ROUNDOFF IS MAKING FURTHER PROGRESS DIFFICULT
+TRY DIFFERENT SETTING FOR EXACTLINE, DERIVES OR ALPHA ON NLPAR
+RESTARTING ESTIMATION FROM LAST ESTIMATES OR DIFFERENT INITIAL GUESSES/PMETHOD OPTION MIGHT ALSO WORK
+
+Dependent Variable A_INDUSTRIAL
+Monthly Data From 2003:01 To 2023:01
+Usable Observations                       241
+Degrees of Freedom                        234
+Centered R^2                        0.8854219
+R-Bar^2                             0.8824840
+Uncentered R^2                      0.8875834
+Mean of Dependent Variable       0.6351912863
+Std Error of Dependent Variable  4.5904072539
+Standard Error of Estimate       1.5736192897
+Sum of Squared Residuals         579.44897453
+Log Likelihood                      -449.9122
+Durbin-Watson Statistic                2.0221
+Q(36-6)                               76.4585
+Significance Level of Q             0.0000063
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  CONSTANT                        0.5598680    0.3260720      1.71701  0.08730097
+2.  AR{1}                           2.2758724    0.7195298      3.16300  0.00176827
+3.  AR{2}                          -1.6081253    1.3691077     -1.17458  0.24135706
+4.  AR{3}                           0.3294417    0.6522971      0.50505  0.61400004
+5.  MA{1}                          -1.0227647  313.7499271     -0.00326  0.99740183
+6.  MA{2}                          -0.2021125    7.2244307     -0.02798  0.97770494
+7.  MA{3}                           0.2248755   70.5808014      0.00319  0.99746060
+
+@REGCRITS
+
+Information Criteria
+AIC          3.800
+SBC          3.916
+Hannan-Quinn 3.847
+(log) FPE    3.800
+
+
+BOXJENK(MAXL,CONST,AR=4,MA=2,DEFINE=CPITRUNC2023) CPI * 2022:01
+
+Box-Jenkins - Estimation by ML Gauss-Newton
+NO CONVERGENCE IN 100 ITERATIONS
+LAST CRITERION WAS  0.0117044
+TRY INCREASING ITERS OPTION
+
+Dependent Variable CPI
+Monthly Data From 2002:01 To 2022:01
+Usable Observations                       241
+Degrees of Freedom                        234
+Centered R^2                        0.9994587
+R-Bar^2                             0.9994449
+Uncentered R^2                      0.9999930
+Mean of Dependent Variable       224.62604979
+Std Error of Dependent Variable   25.73778850
+Standard Error of Estimate         0.60642216
+Sum of Squared Residuals         86.052992292
+Log Likelihood                      -222.8948
+Durbin-Watson Statistic                2.0091
+Q(36-6)                               56.3516
+Significance Level of Q             0.0024874
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  CONSTANT                      217.3618177  186.6472660      1.16456  0.24538330
+2.  AR{1}                           0.8509234    0.1233478      6.89857  0.00000000
+3.  AR{2}                          -0.1274440    0.1855250     -0.68694  0.49280266
+4.  AR{3}                           0.7342145    0.1715370      4.28021  0.00002724
+5.  AR{4}                          -0.4581436    0.1012808     -4.52350  0.00000967
+6.  MA{1}                           0.9331854    0.0998093      9.34969  0.00000000
+7.  MA{2}                           0.8398173    0.0873046      9.61939  0.00000000
+
+@REGCRITS
+
+Information Criteria
+AIC          1.916
+SBC          2.032
+Hannan-Quinn 1.963
+(log) FPE    1.916
+
+*Since there is no convergence for the best model for Industrial, we have to use a linear trend.
+BOXJENK(GLS,CONST,AR=3,MA=3) INDUSTRIAL
+# TIME
+
+Box-Jenkins - Estimation by ML Gauss-Newton
+Convergence in    27 Iterations. Final criterion was  0.0000000 <=  0.0000100
+
+Dependent Variable INDUSTRIAL
+Monthly Data From 2002:01 To 2023:01
+Usable Observations                       253
+Degrees of Freedom                        246
+Centered R^2                        0.9435107
+R-Bar^2                             0.9421329
+Uncentered R^2                      0.9998639
+Mean of Dependent Variable       97.344894071
+Std Error of Dependent Variable   4.792669044
+Standard Error of Estimate        1.152904547
+Sum of Squared Residuals         326.98046831
+Log Likelihood                      -395.8949
+Durbin-Watson Statistic                2.0086
+Q(36-6)                               26.5290
+Significance Level of Q             0.6478793
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  MA{3}                        0.0677173539 0.0863644099      0.78409  0.43374242
+2.  CONSTANT                     0.1000000000 0.0000000000      0.00000  0.00000000
+3.  AR{1}                        0.0111353092 0.1449886671      0.07680  0.93884409
+4.  AR{2}                        0.2502197671 0.1532016241      1.63327  0.10369122
+5.  AR{3}                        0.7383063132 0.1149330436      6.42380  0.00000000
+6.  MA{1}                        1.2485038599 0.1312842292      9.50993  0.00000000
+7.  MA{2}                        0.9473935197 0.0958341639      9.88576  0.00000000
+
+@REGCRITS
+
+Information Criteria
+AIC          3.193
+SBC          3.305
+Hannan-Quinn 3.238
+(log) FPE    3.193
+
+
+BOXJENK(MAXL,CONST,AR=5,MA=3) A_TREASURY
+
+Box-Jenkins - Estimation by ML Gauss-Newton
+NO CONVERGENCE IN 18 ITERATIONS. FINAL NORMED GRADIENT 128878.28046
+SUBITERATIONS LIMIT EXCEEDED.
+ESTIMATION POSSIBLY HAS STALLED OR MACHINE ROUNDOFF IS MAKING FURTHER PROGRESS DIFFICULT
+TRY DIFFERENT SETTING FOR EXACTLINE, DERIVES OR ALPHA ON NLPAR
+RESTARTING ESTIMATION FROM LAST ESTIMATES OR DIFFERENT INITIAL GUESSES/PMETHOD OPTION MIGHT ALSO WORK
+
+Dependent Variable A_TREASURY
+Monthly Data From 2003:01 To 2023:01
+Usable Observations                       241
+Degrees of Freedom                        232
+Centered R^2                        0.9540972
+R-Bar^2                             0.9525143
+Uncentered R^2                      0.9549786
+Mean of Dependent Variable       -0.105881389
+Std Error of Dependent Variable   0.758304829
+Standard Error of Estimate        0.165243771
+Sum of Squared Residuals         6.3348768695
+Log Likelihood                        89.8879
+Durbin-Watson Statistic                2.0507
+Q(36-8)                               62.7105
+Significance Level of Q             0.0001814
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  CONSTANT                       -0.1429792    0.2088556     -0.68458  0.49428979
+2.  AR{1}                           2.1359617    0.0643653     33.18500  0.00000000
+3.  AR{2}                          -1.0892203    0.1415390     -7.69555  0.00000000
+4.  AR{3}                          -0.8884611    0.1565714     -5.67448  0.00000004
+5.  AR{4}                           1.1650744    0.1400459      8.31923  0.00000000
+6.  AR{5}                          -0.3495308    0.0626931     -5.57526  0.00000007
+7.  MA{1}                          -0.7248565  461.1887348     -0.00157  0.99874731
+8.  MA{2}                          -0.7322181   71.4874834     -0.01024  0.99183653
+9.  MA{3}                           1.0026967  535.3591636      0.00187  0.99850722
+
+@REGCRITS
+
+Information Criteria
+AIC          -0.663
+SBC          -0.518
+Hannan-Quinn -0.605
+(log) FPE    -0.663
+
+
+BOXJENK(MAXL,CONST,AR=3,MA=3,DEFINE=INDUSTRIALTRUNC2023) INDUSTRIAL * 2022:01
+
+Box-Jenkins - Estimation by ML Gauss-Newton
+Convergence in    18 Iterations. Final criterion was  0.0000023 <=  0.0000100
+
+Dependent Variable INDUSTRIAL
+Monthly Data From 2002:01 To 2022:01
+Usable Observations                       241
+Degrees of Freedom                        234
+Centered R^2                        0.9419769
+R-Bar^2                             0.9404891
+Uncentered R^2                      0.9998619
+Mean of Dependent Variable       97.076493361
+Std Error of Dependent Variable   4.751282013
+Standard Error of Estimate        1.159068284
+Sum of Squared Residuals         314.36479321
+Log Likelihood                      -375.5653
+Durbin-Watson Statistic                1.9905
+Q(36-6)                               22.2584
+Significance Level of Q             0.8444811
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  CONSTANT                      96.77394767   1.69041787     57.24854  0.00000000
+2.  AR{1}                          2.57700484   0.20732115     12.43001  0.00000000
+3.  AR{2}                         -2.24551296   0.40606852     -5.52989  0.00000009
+4.  AR{3}                          0.66344087   0.20222955      3.28063  0.00119374
+5.  MA{1}                         -1.36714548   0.20366140     -6.71284  0.00000000
+6.  MA{2}                          0.18632254   0.20431776      0.91193  0.36274653
+7.  MA{3}                          0.30265324   0.06797877      4.45217  0.00001316
+
+@REGCRITS
+
+Information Criteria
+AIC          3.183
+SBC          3.299
+Hannan-Quinn 3.230
+(log) FPE    3.183
+
+
+
+
+
+*Since there is no convergence for the best model for TREASURY, we have to a linear trend.
+
+BOXJENK(GLS,CONST,AR=5,MA=3) TREASURY
+# TIME
+
+Box-Jenkins - Estimation by ML Gauss-Newton
+Convergence in    22 Iterations. Final criterion was  0.0000083 <=  0.0000100
+
+Dependent Variable TREASURY
+Monthly Data From 2002:01 To 2023:01
+Usable Observations                       253
+Degrees of Freedom                        244
+Centered R^2                        0.9793599
+R-Bar^2                             0.9786831
+Uncentered R^2                      0.9931890
+Mean of Dependent Variable       1.2763143515
+Std Error of Dependent Variable  0.8974790644
+Standard Error of Estimate       0.1310345990
+Sum of Squared Residuals         4.1894961356
+Log Likelihood                       156.9466
+Durbin-Watson Statistic                2.0047
+Q(36-8)                               29.1679
+Significance Level of Q             0.4040506
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  MA{3}                        -0.002384826  0.006561972     -0.36343  0.71659740
+2.  CONSTANT                      0.100000000  0.000000000      0.00000  0.00000000
+3.  AR{1}                        -0.160405097  0.196234552     -0.81742  0.41448866
+4.  AR{2}                         0.765248165  0.193465844      3.95547  0.00010016
+5.  AR{3}                         0.494465890  0.113988443      4.33786  0.00002107
+6.  AR{4}                        -0.051618459  0.108064223     -0.47766  0.63331652
+7.  AR{5}                        -0.064179431  0.093755951     -0.68454  0.49428572
+8.  MA{1}                         1.646752355  0.186953092      8.80837  0.00000000
+9.  MA{2}                         0.882854875  0.132044721      6.68603  0.00000000
+
+@REGCRITS
+
+Information Criteria
+AIC          -1.162
+SBC          -1.022
+Hannan-Quinn -1.105
+(log) FPE    -1.162
+
+
+BOXJENK(MAXL,CONST,AR=5,MA=3,DEFINE=TREASURYTRUNC2023) TREASURY * 2022:01
+
+Box-Jenkins - Estimation by ML Gauss-Newton
+NO CONVERGENCE IN 19 ITERATIONS. FINAL NORMED GRADIENT 93943.73524
+SUBITERATIONS LIMIT EXCEEDED.
+ESTIMATION POSSIBLY HAS STALLED OR MACHINE ROUNDOFF IS MAKING FURTHER PROGRESS DIFFICULT
+TRY DIFFERENT SETTING FOR EXACTLINE, DERIVES OR ALPHA ON NLPAR
+RESTARTING ESTIMATION FROM LAST ESTIMATES OR DIFFERENT INITIAL GUESSES/PMETHOD OPTION MIGHT ALSO WORK
+
+Dependent Variable TREASURY
+Monthly Data From 2002:01 To 2022:01
+Usable Observations                       241
+Degrees of Freedom                        232
+Centered R^2                        0.9785261
+R-Bar^2                             0.9777857
+Uncentered R^2                      0.9938551
+Mean of Dependent Variable       1.3474536512
+Std Error of Dependent Variable  0.8549039448
+Standard Error of Estimate       0.1274189493
+Sum of Squared Residuals         3.7666565619
+Log Likelihood                       155.7378
+Durbin-Watson Statistic                2.0054
+Q(36-8)                               23.5326
+Significance Level of Q             0.7059462
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  CONSTANT                          1.45606      0.13425     10.84571  0.00000000
+2.  AR{1}                             0.98100      0.30456      3.22108  0.00146013
+3.  AR{2}                             0.67795      0.53305      1.27184  0.20470471
+4.  AR{3}                            -0.25804      0.25152     -1.02590  0.30600797
+5.  AR{4}                            -0.49785      0.22529     -2.20985  0.02809303
+6.  AR{5}                             0.09311      0.10281      0.90567  0.36605204
+7.  MA{1}                             0.44902   7647.86186  5.87122e-05  0.99995320
+8.  MA{2}                            -0.80222  11081.69676 -7.23914e-05  0.99994230
+9.  MA{3}                            -0.64680   4946.40088 -1.30763e-04  0.99989578
+
+@REGCRITS
+
+Information Criteria
+AIC          -1.209
+SBC          -1.065
+Hannan-Quinn -1.151
+(log) FPE    -1.209
+
+
+
+*Forecasting Truncated ARMA (3,3) - INDUSTRIALTRUNC2023
+UFORECAST(FROM=2022:02,TO=2023:01,EQUATION=INDUSTRIALTRUNC2023,STDERRS=INDUSTRIAL,PRINT) INDUSTRALTR2022
+
+  Entry    INDUSTRIAL
+   2022:02 100.9713924
+   2022:03 100.7534575
+   2022:04 100.5329322
+   2022:05 100.3095845
+   2022:06 100.0846218
+   2022:07  99.8601165
+   2022:08  99.6385441
+   2022:09  99.4224309
+   2022:10  99.2141039
+   2022:11  99.0155290
+   2022:12  98.8282231
+   2023:01  98.6532249
+
+
+*Forecasting Truncated ARMA (4,3) - CPITRUNC2023
+UFORECAST(FROM=2022:02,TO=2023:01,EQUATION=CPITRUNC2023,STDERRS=CPI,PRINT) CPITR2022
+
+ Entry       CPI
+ 2022:02 283.4056585
+ 2022:03 283.9408222
+ 2022:04 284.2757252
+ 2022:05 284.5134266
+ 2022:06 284.6006184
+ 2022:07 284.6452271
+ 2022:08 284.6931637
+ 2022:09 284.6833851
+ 2022:10 284.6617610
+ 2022:11 284.6593653
+ 2022:12 284.6309412
+ 2023:01 284.5956631
+
+
+
+*Forecasting Truncated ARMA (5,3) - TREASURYTRUNC2023
+UFORECAST(FROM=2022:02,TO=2023:01,EQUATION=TREASURYTRUNC2023,STDERRS=TREASURY,PRINT) TREASURYTR2022
+
+ Entry    TREASURY
+ 2022:02 0.859686704
+ 2022:03 0.898483749
+ 2022:04 0.970419391
+ 2022:05 1.027875873
+ 2022:06 1.084929096
+ 2022:07 1.149067404
+ 2022:08 1.203639618
+ 2022:09 1.264028821
+ 2022:10 1.320663576
+ 2022:11 1.376462394
+ 2022:12 1.432816994
+ 2023:01 1.486332207
+
+
+*VAR_MODEL_
+@varlagselect(lags=12, crit=SBC)
+# CPI INDUSTRIAL TREASURY
+
+VAR Lag Selection
+Lags SBC/BIC
+   0 20.4418467
+   1 10.8933274
+   2 10.8885758*
+   3 10.9927567
+   4 11.1425234
+   5 11.3265942
+   6 11.5096706
+   7 11.6951819
+   8 11.8693647
+   9 12.0370352
+  10 12.2357007
+  11 12.4019095
+  12 12.4823438
+
+*Based on SBC values, the varlagselect commands suggest VAR 2 is the best fit so I am going to do VAR 2.
+SYSTEM(MODEL=VAR_2_MODEL)
+VARIABLES INDUSTRIAL CPI TREASURY
+LAGS 1 TO 2
+DET
+END(SYSTEM)
+ESTIMATE 2002:01 2022:01
+
+VAR/System - Estimation by Least Squares
+Monthly Data From 2002:01 To 2022:01
+Usable Observations                       239
+Skipped/Missing (from 241)                  2
+
+Dependent Variable INDUSTRIAL
+Mean of Dependent Variable       97.148545188
+Std Error of Dependent Variable   4.704910614
+Standard Error of Estimate        1.167162295
+Sum of Squared Residuals         317.40840286
+Durbin-Watson Statistic                1.8689
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  INDUSTRIAL{1}                 1.139204521  0.065634211     17.35687  0.00000000
+2.  INDUSTRIAL{2}                -0.146456353  0.065857171     -2.22385  0.02711812
+3.  CPI{1}                        0.351114653  0.114209490      3.07430  0.00236154
+4.  CPI{2}                       -0.349178962  0.114566552     -3.04783  0.00257096
+5.  TREASURY{1}                  -0.563314870  0.530036152     -1.06279  0.28897938
+6.  TREASURY{2}                   0.676145452  0.531368619      1.27246  0.20447798
+
+    F-Tests, Dependent Variable INDUSTRIAL
+              Variable           F-Statistic     Signif
+    *******************************************************
+    INDUSTRIAL                      7152.9219    0.0000000
+    CPI                                5.0548    0.0070962
+    TREASURY                           1.5350    0.2176282
+
+
+Dependent Variable CPI
+Mean of Dependent Variable       225.01748117
+Std Error of Dependent Variable   25.48450178
+Standard Error of Estimate         0.59305519
+Sum of Squared Residuals         81.949469814
+Durbin-Watson Statistic                1.7829
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  INDUSTRIAL{1}                 0.009099220  0.033349869      0.27284  0.78521691
+2.  INDUSTRIAL{2}                -0.011684036  0.033463159     -0.34916  0.72728365
+3.  CPI{1}                        1.539107011  0.058031802     26.52179  0.00000000
+4.  CPI{2}                       -0.536929758  0.058213231     -9.22350  0.00000000
+5.  TREASURY{1}                  -0.556585519  0.269320466     -2.06663  0.03987430
+6.  TREASURY{2}                   0.527994678  0.269997515      1.95555  0.05171307
+
+    F-Tests, Dependent Variable CPI
+              Variable           F-Statistic     Signif
+    *******************************************************
+    INDUSTRIAL                         0.2293    0.7952976
+    CPI                           157497.8455    0.0000000
+    TREASURY                           2.2736    0.1052155
+
+
+Dependent Variable TREASURY
+Mean of Dependent Variable       1.3423949585
+Std Error of Dependent Variable  0.8566678584
+Standard Error of Estimate       0.1323489572
+Sum of Squared Residuals         4.0812854258
+Durbin-Watson Statistic                1.8769
+
+    Variable                        Coeff      Std Error      T-Stat      Signif
+************************************************************************************
+1.  INDUSTRIAL{1}                -0.024114860  0.007442512     -3.24015  0.00136908
+2.  INDUSTRIAL{2}                 0.024350879  0.007467794      3.26079  0.00127730
+3.  CPI{1}                        0.028827409  0.012950647      2.22594  0.02697539
+4.  CPI{2}                       -0.028913151  0.012991136     -2.22561  0.02699833
+5.  TREASURY{1}                   1.314800165  0.060102809     21.87585  0.00000000
+6.  TREASURY{2}                  -0.328466993  0.060253902     -5.45138  0.00000013
+
+    F-Tests, Dependent Variable TREASURY
+              Variable           F-Statistic     Signif
+    *******************************************************
+    INDUSTRIAL                         5.3174    0.0055189
+    CPI                                2.4777    0.0861465
+    TREASURY                        5302.7458    0.0000000
+
+*There is no evidence of predictive causality between the two variables.
+
+FORECAST(MODEL=VAR_2_MODEL,FROM=2022:02,TO=2023:01,RESULT=VAR2LAG,PRINT)
+
+  Entry    INDUSTRIAL      CPI      TREASURY
+   2022:02 101.4985587 283.5731205 0.814341878
+   2022:03 101.8652604 284.5294213 0.835604679
+   2022:04 102.1448425 285.3682445 0.849535024
+   2022:05 102.3767705 286.1475495 0.859585371
+   2022:06 102.5845207 286.8971990 0.867651391
+   2022:07 102.7805712 287.6325555 0.874671463
+   2022:08 102.9714183 288.3615468 0.881106896
+   2022:09 103.1604293 289.0882781 0.887187548
+   2022:10 103.3493443 289.8148818 0.893030233
+   2022:11 103.5390573 290.5424681 0.898695837
+   2022:12 103.7300218 291.2716166 0.904217214
+   2023:01 103.9224623 292.0026308 0.909613002
+
+*Setting up the levels:
+SET CPILEVEL = CPITR2022 + CPI(22)
+SET INDUSTRIALLEVEL = INDUSTRALTR2022 + INDUSTRIAL(22)
+SET TREASURYLEVEL = TREASURYTR2022 + TREASURY(22)
+SET CPIVARLEVEL = VAR2LAG(1) + CPI(22)
+SET INDUSTRIALVARLEVEL = VAR2LAG(1) + INDUSTRIAL(22)
+SET TREASURYVARLEVEL = VAR2LAG(1)+ TREASURY(22)
+
+SET CPITRUNC 2022:02 2023:01 = CPI
+SET INDUSTRIALTRUNC 2022:02 2023:01 = INDUSTRIAL
+SET TREASURYTRUNC 2022:02 2023:01 = TREASURY
+
+
+*Checking forecasting errors:
+@uforeerrors CPILEVEL CPITRUNC
+
+Forecast Analysis for CPILEVEL
+From 2022:02 to 2023:01
+Mean Error                    466.063711
+Mean Absolute Error           466.063711
+Root Mean Square Error        466.065206
+Mean Square Error          217216.776082
+Theil's U                    2255.750478
+
+Mean Pct Error                  0.993017
+Mean Abs Pct Error              0.993017
+Root Mean Square Pct Error      0.993022
+Theil's Relative U           2251.414617
+
+@uforeerrors INDUSTRIALLEVEL INDUSTRIALTRUNC
+
+Forecast Analysis for INDUSTRIALLEVEL
+From 2022:02 to 2023:01
+Mean Error                  89.7782369
+Mean Absolute Error         89.7782369
+Root Mean Square Error      89.7804848
+Mean Square Error          8060.535444
+Theil's U                  1562.109843
+
+Mean Pct Error                0.968779
+Mean Abs Pct Error            0.968779
+Root Mean Square Pct Error    0.968820
+Theil's Relative U         1559.797425
+
+@uforeerrors TREASURYLEVEL TREASURYTRUNC
+
+Forecast Analysis for TREASURYLEVEL
+From 2022:02 to 2023:01
+Mean Error                   290.097457
+Mean Absolute Error          290.097457
+Root Mean Square Error       290.108096
+Mean Square Error          84162.707216
+Theil's U                    377.075636
+
+Mean Pct Error                 0.998692
+Mean Abs Pct Error             0.998692
+Root Mean Square Pct Error     0.998692
+Theil's Relative U           377.053067
+
+
+
+@uforeerrors TREASURYVARLEVEL TREASURYTRUNC
+
+Forecast Analysis for TREASURYVARLEVEL
+From 2022:02 to 2023:01
+Mean Error                   104.988603
+Mean Absolute Error          104.988603
+Root Mean Square Error       104.990380
+Mean Square Error          11022.979834
+Theil's U                    463.112667
+
+Mean Pct Error                 0.996391
+Mean Abs Pct Error             0.996391
+Root Mean Square Pct Error     0.996392
+Theil's Relative U           462.185750
+
+@uforeerrors INDUSTRIALVARLEVEL INDUSTRIALTRUNC
+
+Forecast Analysis for INDUSTRIALVARLEV
+From 2022:02 to 2023:01
+Mean Error                   191.432308
+Mean Absolute Error          191.432308
+Root Mean Square Error       191.432355
+Mean Square Error          36646.346533
+Theil's U                    844.408304
+
+Mean Pct Error                 0.985117
+Mean Abs Pct Error             0.985117
+Root Mean Square Pct Error     0.985127
+Theil's Relative U           842.940344
+
+@uforeerrors CPIVARLEVEL CPITRUNC
+
+Forecast Analysis for CPIVARLEVEL
+From 2022:02 to 2023:01
+Mean Error                   284.448502
+Mean Absolute Error          284.448502
+Root Mean Square Error       284.449468
+Mean Square Error          80911.500055
+Theil's U                   1254.706882
+
+Mean Pct Error                 0.988619
+Mean Abs Pct Error             0.988619
+Root Mean Square Pct Error     0.988632
+Theil's Relative U          1252.871989
+
+
+**COMPARING THE MSE VALUES FROM THE ARMA and the VAR models, we can find that that the VAR models have a considerable lower MSE values than the ARMA models.
+
+
+
+
+GRAPH(STYLE=LINE,HEADER="GRAPH OF DIFFERENT LEVELS of CPI, Treasury Bond Rates and Industrial Index",KEY=BELOW) 6
+# CPILEVEL
+# INDUSTRIALLEVEL
+# TREASURYLEVEL
+# CPITRUNC
+# TREASURYTRUNC
+# INDUSTRIALTRUNC
